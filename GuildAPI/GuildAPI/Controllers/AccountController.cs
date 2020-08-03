@@ -46,11 +46,7 @@ namespace GuildAPI.Controllers
 
             var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, false);
-                return Ok();
-            }
+            if (result.Succeeded) return Ok();
             
             return BadRequest("Invalid Registration");
         }
@@ -60,9 +56,18 @@ namespace GuildAPI.Controllers
         {
             var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, false, false);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
-                return Ok("Logged in");
+                var user = await _userManager.FindByEmailAsync(loginDTO.Email);
+
+                var identityRole = await _userManager.GetRolesAsync(user);
+
+                var token = CreateToken(user, identityRole.ToList());
+
+                return Ok(new { 
+                    jwt = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiration = token.ValidTo
+                });
             }
 
             return BadRequest("Invalid attempt");

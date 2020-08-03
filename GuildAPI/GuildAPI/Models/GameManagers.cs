@@ -7,8 +7,8 @@ namespace GuildAPI.Models
 {
     public class GameManagers
     {
-        public int GameID { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+        public int GameId { get; set; }
 
     }
 }

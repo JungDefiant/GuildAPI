@@ -1,4 +1,5 @@
-﻿using GuildAPI.Models.interfaces;
+﻿using GuildAPI.Data;
+using GuildAPI.Models.interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace GuildAPI.Models.Services
 
         public GamesService(GuildAPIDbContext context)
         {
-            _context = _context;
+            _context = context;
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace GuildAPI.Models.Services
         /// <returns>task of completion</returns>
         public async Task RemoveGameGuild( int gameId, int guildId)
         {
-            var result = await _context.GameGuild.FirstOrDefaultAsync(x => x.GameId == gameId && x.GuildId == guildId);
+            var result = await _context.GameGuilds.FirstOrDefaultAsync(x => x.GameId == gameId && x.GuildId == guildId);
             _context.Entry(result).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
@@ -130,13 +131,14 @@ namespace GuildAPI.Models.Services
         /// <param name="gameId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        /*
         public async Task RemoveGameManager(int gameId, string userId)
         {
-            var result = await _context.GameManager.FirstOrDefaultAsync(x => x.GameId == gameId && x.UserId == userId);
+            var result = await _context.GameManagers.FirstOrDefaultAsync(x => x.GameId == gameId && x.UserId == userId);
             _context.Entry(result).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
-
+        */
 
     }
 }

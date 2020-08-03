@@ -11,5 +11,8 @@ namespace GuildAPI.Models
 
         public int GuildId { get; set; }
 
+        public Games Games { get; set; }
+        public Guilds Guilds { get; set; }
+
     }
 }

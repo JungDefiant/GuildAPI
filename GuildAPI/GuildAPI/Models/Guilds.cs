@@ -8,7 +8,8 @@ namespace GuildAPI.Models
     public class Guilds
     {
         public int Id { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; }
+        public GameGuilds GameGuilds { get; set; }
 
     }
 }

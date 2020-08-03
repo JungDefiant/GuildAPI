@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GuildAPI.Models.interfaces
 {
-    interface IGames
+    public interface IGames
     {
         Task<Games> Create(Games game);
         Task<List<Games>> GetGames();

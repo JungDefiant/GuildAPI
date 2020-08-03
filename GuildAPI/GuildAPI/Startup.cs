@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using GuildAPI.Models;
 using GuildAPI.Models.interfaces;
 using GuildAPI.Models.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace GuildAPI
 {
@@ -33,10 +34,15 @@ namespace GuildAPI
         {
             services.AddControllers()
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
             services.AddDbContext<GuildAPIDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<GuildAPIDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddTransient<IGames, GamesService>();
             services.AddTransient<IGuilds, GuildService>();
@@ -54,11 +60,7 @@ namespace GuildAPI
 
             app.UseEndpoints(endpoints =>
             {
-                
-                
                     endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-
-                
             });
         }
     }

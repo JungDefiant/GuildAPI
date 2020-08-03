@@ -14,6 +14,7 @@ using Newtonsoft;
 using Newtonsoft.Json;
 using GuildAPI.Models;
 using GuildAPI.Models.interfaces;
+using GuildAPI.Models.Services;
 
 namespace GuildAPI
 {
@@ -38,7 +39,7 @@ namespace GuildAPI
             });
 
             services.AddTransient<IGames, GamesService>();
-            services.AddTransient<IGuilds, GuildsService>();
+            services.AddTransient<IGuilds, GuildService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

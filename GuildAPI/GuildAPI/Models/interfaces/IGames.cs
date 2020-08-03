@@ -14,7 +14,8 @@ namespace GuildAPI.Models.interfaces
         Task Delete(int id);
         Task AddGameGuild(int gameId, int guildId);
         Task RemoveGameGuild(int gameId, int guildId);
-        Task AddGameManager(int gamdeId, string UserId);
-        Task RemoveGameManager(int gamId, string UserId);
+
+       /// Task AddGameManager(int gamdeId, string UserId);
+       /// Task RemoveGameManager(int gamId, string UserId);
     }
 }

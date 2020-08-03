@@ -1,4 +1,5 @@
-﻿using GuildAPI.Models.interfaces;
+﻿using GuildAPI.Data;
+using GuildAPI.Models.interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

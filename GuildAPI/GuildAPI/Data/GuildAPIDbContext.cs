@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuildAPI.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace GuildAPI.Data
 {
-    public class GuildAPIDbContext : DbContext
+    public class GuildAPIDbContext : IdentityDbContext<ApplicationUser>
     {
         public GuildAPIDbContext(DbContextOptions<GuildAPIDbContext> options) : base(options)
         {
@@ -17,6 +18,8 @@ namespace GuildAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<GameGuilds>().HasKey(x => new { x.GameId, x.GuildId });
 
 

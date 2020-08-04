@@ -10,7 +10,6 @@ using GuildAPI.Models;
 using GuildAPI.Models.interfaces;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.SignalR;
-using GuildAPI.Controllers.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 
@@ -90,8 +89,9 @@ namespace GuildAPI.Controllers
         public async Task<ActionResult> PostGameGuilds(int gameId, int guildId)
         {
             var email = HttpContext.User.Claims.First(e => e.Type == "Email").Value;
-            var userId = await GetUserId(email);
-            if ( await _games.VerifyManager(userId, gameId))
+            var user = await _userManager.FindByEmailAsync(email);
+            var roles = await _userManager.GetRolesAsync(user);
+            if (await _games.VerifyManager(user.Id, gameId) || roles.Contains("Administrator"))
             {
                 await _games.AddGameGuild(gameId, guildId);
                 return Ok();
@@ -101,23 +101,18 @@ namespace GuildAPI.Controllers
 
         //DELETE: api/Games/5
         [HttpDelete("{gameId}/Guilds/{guildId}")]
+        [Authorize(Policy = "Manager")]
         public async Task<ActionResult> DeleteGameGuilds(int gameId, int guildId)
         {
-            await _games.RemoveGameGuild(gameId, guildId);
-            return NoContent();
-        }
-
-        public async Task<string> GetUserId(string email)
-        {
-            try
+            var email = HttpContext.User.Claims.First(e => e.Type == "Email").Value;
+            var user = await _userManager.FindByEmailAsync(email);
+            var roles = await _userManager.GetRolesAsync(user);
+            if (await _games.VerifyManager(user.Id, gameId) || roles.Contains("Administrator"))
             {
-                var user = await _userManager.FindByEmailAsync(email);
-                return user.Id;
+                await _games.RemoveGameGuild(gameId, guildId);
+                return NoContent();
             }
-            catch (NullReferenceException)
-            {
-                return null;
-            }
+            return BadRequest("Manager does not have access");
         }
     }
 }

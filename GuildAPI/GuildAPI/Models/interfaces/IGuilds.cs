@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GuildAPI.Models.interfaces
 {
-    interface IGuilds
+    public interface IGuilds
     {
         /// <summary>
         /// Creates a new guild and adds it to the Guilds database table

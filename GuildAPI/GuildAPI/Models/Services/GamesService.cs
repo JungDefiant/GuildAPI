@@ -125,6 +125,8 @@ namespace GuildAPI.Models.Services
             await _context.SaveChangesAsync();
         }
 
+
+
         /// <summary>
         /// removes manager from game
         /// </summary>

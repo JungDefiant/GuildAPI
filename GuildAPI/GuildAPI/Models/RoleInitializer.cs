@@ -38,7 +38,7 @@ namespace GuildAPI.Models
             {
                 dbContext.Database.EnsureCreated();
                 AddRoles(dbContext);
-                //SeedUsers(users, _config);
+                SeedUsers(users, _config);
             }
         }
 

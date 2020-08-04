@@ -34,6 +34,7 @@ namespace GuildAPI.Controllers
         }
 
         [HttpPost, Route("register")]
+        [Authorize(Policy = "RegisterUser")]
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
             ApplicationUser user = new ApplicationUser()
@@ -52,6 +53,7 @@ namespace GuildAPI.Controllers
         }
 
         [HttpPost, Route("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
             var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, false, false);

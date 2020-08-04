@@ -48,6 +48,7 @@ namespace GuildAPI
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("CreateGame", policy => policy.RequireRole(ApplicationRoles.Administrator));
+                options.AddPolicy("RegisterUser", policy => policy.RequireRole(ApplicationRoles.Administrator));
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()

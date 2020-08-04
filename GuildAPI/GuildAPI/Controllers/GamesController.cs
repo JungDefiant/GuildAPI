@@ -90,9 +90,14 @@ namespace GuildAPI.Controllers
         {
             var email = HttpContext.User.Claims.First(e => e.Type == "Email").Value;
             var userID = GetUserId(email);
-            //_context.GameManagers.
-            //await _games.AddGameGuild(gameId, guildId);
-            return Ok();
+
+            var gameManager = await _context.GameManagers.FindAsync(gameId, userID);
+            if (gameManager != null)
+            {
+                await _games.AddGameGuild(gameId, guildId);
+                return Ok();
+            }
+            return BadRequest();
         }
 
         //DELETE: api/Games/5

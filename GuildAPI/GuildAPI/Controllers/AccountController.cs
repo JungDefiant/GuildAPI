@@ -34,7 +34,7 @@ namespace GuildAPI.Controllers
         }
 
         [HttpPost, Route("register")]
-        [Authorize(Policy = "RegisterUser")]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
             ApplicationUser user = new ApplicationUser()

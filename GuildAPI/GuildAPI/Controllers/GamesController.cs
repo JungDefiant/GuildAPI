@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using GuildAPI.Controllers.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GuildAPI.Controllers
 {
@@ -21,13 +22,12 @@ namespace GuildAPI.Controllers
     {
         private readonly IGames _games;
         private readonly UserManager<ApplicationUser> _userManager;
-        private GuildAPIDbContext _context;
 
-        public GamesController(IGames games, UserManager<ApplicationUser> userManager, GuildAPIDbContext context)
+
+        public GamesController(IGames games, UserManager<ApplicationUser> userManager)
         {
             _games = games;
             _userManager = userManager;
-            _context = context;
         }
 
         // GET: api/Games
@@ -86,18 +86,17 @@ namespace GuildAPI.Controllers
 
         //POST: api/Games/5/Guilds/5
         [HttpPost("{gameId}/Guilds/{guildId}")]
+        [Authorize(Policy = "Manager")]
         public async Task<ActionResult> PostGameGuilds(int gameId, int guildId)
         {
             var email = HttpContext.User.Claims.First(e => e.Type == "Email").Value;
-            var userID = GetUserId(email);
-
-            var gameManager = await _context.GameManagers.FindAsync(gameId, userID);
-            if (gameManager != null)
+            var userId = await GetUserId(email);
+            if ( await _games.VerifyManager(userId, gameId))
             {
                 await _games.AddGameGuild(gameId, guildId);
                 return Ok();
             }
-            return BadRequest();
+            return BadRequest("Manager does not have access");
         }
 
         //DELETE: api/Games/5

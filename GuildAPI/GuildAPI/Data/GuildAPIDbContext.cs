@@ -64,10 +64,6 @@ namespace GuildAPI.Data
         public DbSet<Games> Games { get; set; }
         public DbSet<Guilds> Guilds { get; set; }
         public DbSet<GameGuilds> GameGuilds { get; set; }
-
-
-
-
     }
 }
 

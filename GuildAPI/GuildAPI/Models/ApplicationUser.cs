@@ -10,6 +10,11 @@ namespace GuildAPI.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+    }
 
+    public static class ApplicationRoles
+    {
+        public const string Administrator = "Administrator";
+        public const string Manager = "Manager";
     }
 }

@@ -9,6 +9,9 @@ using GuildAPI.Data;
 using GuildAPI.Models;
 using GuildAPI.Models.interfaces;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
+using Microsoft.AspNetCore.SignalR;
+using GuildAPI.Controllers.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace GuildAPI.Controllers
 {
@@ -17,10 +20,14 @@ namespace GuildAPI.Controllers
     public class GamesController : ControllerBase
     {
         private readonly IGames _games;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private GuildAPIDbContext _context;
 
-        public GamesController(IGames games)
+        public GamesController(IGames games, UserManager<ApplicationUser> userManager, GuildAPIDbContext context)
         {
             _games = games;
+            _userManager = userManager;
+            _context = context;
         }
 
         // GET: api/Games
@@ -79,19 +86,34 @@ namespace GuildAPI.Controllers
 
         //POST: api/Games/5/Guilds/5
         [HttpPost("{gameId}/Guilds/{guildId}")]
-        public async Task<ActionResult> PostGameGuilds(int gameId, int guildId )
+        public async Task<ActionResult> PostGameGuilds(int gameId, int guildId)
         {
-            await _games.AddGameGuild(gameId, guildId);
+            var email = HttpContext.User.Claims.First(e => e.Type == "Email").Value;
+            var userID = GetUserId(email);
+            //_context.GameManagers.
+            //await _games.AddGameGuild(gameId, guildId);
             return Ok();
-           
         }
 
         //DELETE: api/Games/5
-        [HttpDelete ("{gameId}/Guilds/{guildId}")]
+        [HttpDelete("{gameId}/Guilds/{guildId}")]
         public async Task<ActionResult> DeleteGameGuilds(int gameId, int guildId)
         {
             await _games.RemoveGameGuild(gameId, guildId);
             return NoContent();
+        }
+
+        public async Task<string> GetUserId(string email)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                return user.Id;
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
         }
     }
 }

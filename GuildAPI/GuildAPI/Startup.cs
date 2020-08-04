@@ -36,8 +36,7 @@ namespace GuildAPI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options => 
-            options.Filters.Add(new AuthorizeFilter()))
+            services.AddControllers(options => options.Filters.Add(new AuthorizeFilter()))
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             services.AddDbContext<GuildAPIDbContext>(options =>

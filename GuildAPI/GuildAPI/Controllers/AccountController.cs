@@ -61,7 +61,7 @@ namespace GuildAPI.Controllers
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByEmailAsync(loginDTO.Email);
-
+                
                 var identityRole = await _userManager.GetRolesAsync(user);
 
                 var token = CreateToken(user, identityRole.ToList());
@@ -85,7 +85,7 @@ namespace GuildAPI.Controllers
                 Guid.NewGuid().ToString()),
                 new Claim("FirstName", user.FirstName),
                 new Claim("LastName", user.LastName),
-                new Claim("Id", user.Id)
+                new Claim("Email", user.Email)
             };
 
             foreach (var item in role)

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using GuildAPI.Models.DTOs;
 
 namespace GuildAPI.Controllers
 {
@@ -32,7 +33,7 @@ namespace GuildAPI.Controllers
         // GET: api/Games
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Games>>> GetGames()
+        public async Task<ActionResult<IEnumerable<GamesDTO>>> GetGames()
         {
             return await _games.GetGames();
         }
@@ -40,7 +41,7 @@ namespace GuildAPI.Controllers
         // GET: api/Games/5
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<Games>> GetGame(int id)
+        public async Task<ActionResult<GamesDTO>> GetGame(int id)
         {
             var games = await _games.GetGame(id);
 
@@ -57,7 +58,7 @@ namespace GuildAPI.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         [Authorize(Policy = "Administrator")]
-        public async Task<IActionResult> PutGames(int id, Games games)
+        public async Task<IActionResult> PutGames(int id, GamesDTO games)
         {
             if (id != games.Id)
             {
@@ -73,7 +74,7 @@ namespace GuildAPI.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         [Authorize(Policy = "Administrator")]
-        public async Task<ActionResult<Games>> PostGames(Games games)
+        public async Task<ActionResult<GamesDTO>> PostGames(GamesDTO games)
         {
             await _games.Create(games);
             return CreatedAtAction("GetGames", new { id = games.Id }, games);
@@ -82,7 +83,7 @@ namespace GuildAPI.Controllers
         // DELETE: api/Games/5
         [HttpDelete("{id}")]
         [Authorize(Policy = "Administrator")]
-        public async Task<ActionResult<Games>> DeleteGames(int id)
+        public async Task<ActionResult<GamesDTO>> DeleteGames(int id)
         {
             await _games.Delete(id);
             return NoContent();

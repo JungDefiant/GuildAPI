@@ -72,5 +72,14 @@ namespace GuildAPI.Models.Services
             await _context.SaveChangesAsync();
             return guild;
         }
+
+        /// <summary>
+        /// Verifies that a Manager (user) of a game has access to a specific game
+        /// </summary>
+        /// <param name="userId">ID of user (with manager role)</param>
+        /// <param name="gameId">ID of game</param>
+        /// <returns>True if they have access; False if denied access</returns>
+        public async Task<bool> VerifyManager(string userId, int gameId) =>
+            await _context.GameManagers.AnyAsync(x => x.UserId == userId && x.GameId == gameId);
     }
 }

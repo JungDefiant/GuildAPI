@@ -47,8 +47,12 @@ namespace GuildAPI.Controllers
 
             var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
-            if (result.Succeeded) return Ok();
-            
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, ApplicationRoles.Manager);
+                return Ok();
+            }
+
             return BadRequest("Invalid Registration");
         }
 
@@ -61,12 +65,13 @@ namespace GuildAPI.Controllers
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByEmailAsync(loginDTO.Email);
-                
+
                 var identityRole = await _userManager.GetRolesAsync(user);
 
                 var token = CreateToken(user, identityRole.ToList());
 
-                return Ok(new { 
+                return Ok(new
+                {
                     jwt = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo
                 });
@@ -79,7 +84,7 @@ namespace GuildAPI.Controllers
         {
             var authClaims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Sub, 
+                new Claim(JwtRegisteredClaimNames.Sub,
                 user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti,
                 Guid.NewGuid().ToString()),

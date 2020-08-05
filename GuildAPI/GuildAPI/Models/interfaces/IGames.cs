@@ -63,7 +63,7 @@ namespace GuildAPI.Models.interfaces
         /// <param name="gameId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task AddGameManager(int gamdeId, string UserId);
+        Task AddGameManager(int gameId, string userId);
 
         /// <summary>
         /// removes manager from game
@@ -71,7 +71,7 @@ namespace GuildAPI.Models.interfaces
         /// <param name="gameId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task RemoveGameManager(int gamId, string UserId);
+        Task RemoveGameManager(int gameId, string userId);
 
         /// <summary>
         /// Verifies that a Manager (user) of a game has access to a specific game

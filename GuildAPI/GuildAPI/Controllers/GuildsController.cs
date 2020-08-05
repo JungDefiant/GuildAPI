@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using GuildAPI.Data;
 using GuildAPI.Models;
 using GuildAPI.Models.interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace GuildAPI.Controllers
 {
@@ -16,14 +18,19 @@ namespace GuildAPI.Controllers
     public class GuildsController : ControllerBase
     {
         private readonly IGuilds _guilds;
+        private readonly IGames _games;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public GuildsController(IGuilds guilds)
+        public GuildsController(IGuilds guilds, IGames games, UserManager<ApplicationUser> userManager)
         {
             _guilds = guilds;
+            _games = games;
+            _userManager = userManager;
         }
 
         // GET: api/Guilds
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Guilds>>> GetGuilds()
         {
             return await _guilds.GetGuilds();
@@ -31,6 +38,7 @@ namespace GuildAPI.Controllers
 
         // GET: api/Guilds/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Guilds>> GetGuilds(int id)
         {
             var guilds = await _guilds.GetGuild(id);
@@ -47,6 +55,7 @@ namespace GuildAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Policy = "Manager")]
         public async Task<IActionResult> PutGuilds(int id, Guilds guilds)
         {
             if (id != guilds.Id)
@@ -60,21 +69,37 @@ namespace GuildAPI.Controllers
         // POST: api/Guilds
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Guilds>> PostGuilds(Guilds guilds)
+        [HttpPost("Game/{gameId}")]
+        [Authorize(Policy = "Manager")]
+        public async Task<ActionResult<Guilds>> PostGuilds(Guilds guilds, int gameId)
         {
-           await _guilds.Create(guilds);
-           return CreatedAtAction("GetGuilds", new { id = guilds.Id }, guilds);
+            var email = HttpContext.User.Claims.First(e => e.Type == "Email").Value;
+            var user = await _userManager.FindByEmailAsync(email);
+            var roles = await _userManager.GetRolesAsync(user);
+            if (await _guilds.VerifyManager(user.Id, gameId) || roles.Contains("Administrator"))
+            {
+                await _guilds.Create(guilds);
+                await _games.AddGameGuild(gameId, guilds.Id);
+                return CreatedAtAction("GetGuilds", new { id = guilds.Id }, guilds);
+            }
+            return BadRequest("Manager does not have access");
         }
 
         // DELETE: api/Guilds/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Guilds>> DeleteGuilds(int id)
+        [HttpDelete("{guildId}/Game/{gameId}")]
+        [Authorize(Policy = "Manager")]
+        public async Task<ActionResult<Guilds>> DeleteGuilds(int guildId, int gameId)
         {
-            await _guilds.Delete(id);
-            return NoContent();
+            var email = HttpContext.User.Claims.First(e => e.Type == "Email").Value;
+            var user = await _userManager.FindByEmailAsync(email);
+            var roles = await _userManager.GetRolesAsync(user);
+            if (await _guilds.VerifyManager(user.Id, gameId) || roles.Contains("Administrator"))
+            {
+                await _games.RemoveGameGuild(gameId, guildId);
+                await _guilds.Delete(guildId);
+                return NoContent();
+            }
+            return BadRequest("Manager does not have access");
         }
-
-
     }
 }

@@ -31,6 +31,7 @@ namespace GuildAPI.Controllers
 
         // GET: api/Games
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Games>>> GetGames()
         {
             return await _games.GetGames();
@@ -38,6 +39,7 @@ namespace GuildAPI.Controllers
 
         // GET: api/Games/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Games>> GetGame(int id)
         {
             var games = await _games.GetGame(id);
@@ -54,6 +56,7 @@ namespace GuildAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> PutGames(int id, Games games)
         {
             if (id != games.Id)
@@ -69,6 +72,7 @@ namespace GuildAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(Policy = "Administrator")]
         public async Task<ActionResult<Games>> PostGames(Games games)
         {
             await _games.Create(games);
@@ -77,6 +81,7 @@ namespace GuildAPI.Controllers
 
         // DELETE: api/Games/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "Administrator")]
         public async Task<ActionResult<Games>> DeleteGames(int id)
         {
             await _games.Delete(id);
@@ -99,7 +104,7 @@ namespace GuildAPI.Controllers
             return BadRequest("Manager does not have access");
         }
 
-        //DELETE: api/Games/5
+        //DELETE: api/Games/5/Guilds/5
         [HttpDelete("{gameId}/Guilds/{guildId}")]
         [Authorize(Policy = "Manager")]
         public async Task<ActionResult> DeleteGameGuilds(int gameId, int guildId)
@@ -113,6 +118,26 @@ namespace GuildAPI.Controllers
                 return NoContent();
             }
             return BadRequest("Manager does not have access");
+        }
+
+        ////POST: api/Games/5/GameManager/5
+        [HttpPost("{gameId}/Manager/{userEmail}")]
+        [Authorize(Policy = "Administrator")]
+        public async Task<ActionResult> AddGameManager(int gameId, string userEmail)
+        {
+            var user = await _userManager.FindByEmailAsync(userEmail);
+            await _games.AddGameManager(gameId, user.Id);
+            return Ok();
+        }
+
+        ////DELETE: api/Games/5/GameManager/5
+        [HttpDelete("{gameId}/Manager/{userEmail}")]
+        [Authorize(Policy = "Administrator")]
+        public async Task<ActionResult> RemoveGameManager(int gameId, string userEmail)
+        {
+            var user = await _userManager.FindByEmailAsync(userEmail);
+            await _games.RemoveGameManager(gameId, user.Id);
+            return Ok();
         }
     }
 }

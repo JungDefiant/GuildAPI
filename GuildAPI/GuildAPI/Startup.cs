@@ -1,25 +1,21 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GuildAPI.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft;
 using Newtonsoft.Json;
 using GuildAPI.Models;
 using GuildAPI.Models.interfaces;
 using GuildAPI.Models.Services;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 namespace GuildAPI
 {
@@ -73,6 +69,19 @@ namespace GuildAPI
                     };
                 });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GuildAPI", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                });
+                //c.OperationFilter<AuthenticationRequirementOperationFilter>();
+            });
+
             services.AddTransient<IGames, GamesService>();
             services.AddTransient<IGuilds, GuildService>();
         }
@@ -98,6 +107,14 @@ namespace GuildAPI
             app.UseEndpoints(endpoints =>
             {
                     endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "GuildAPI");
+                c.RoutePrefix = string.Empty;
             });
         }
     }

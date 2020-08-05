@@ -69,15 +69,30 @@ namespace GuildAPI.Models.Services
             var games = await _context.Games
                 .Where(x => x.Id == id)
                 .Include(x => x.GameGuilds)
-                .ThenInclude(x => x.Guild)
                 .FirstOrDefaultAsync();
+
+            List<GuildsDTO> guilds = new List<GuildsDTO>();
+
+            foreach(GameGuilds gameGuild in games.GameGuilds)
+            {
+                guilds.Add(new GuildsDTO()
+                {
+                    Id = gameGuild.GuildId,
+                    Name = gameGuild.Guild.Name
+                });
+            }
 
             GamesDTO gamesDTO = new GamesDTO()
             {
                 Id = games.Id,
                 Name = games.Name,
-                GameGuilds = games.GameGuilds
+                Guilds = guilds
             };
+
+            foreach(var guild in games.GameGuilds)
+            {
+                guild.Game = null;
+            }
 
             return gamesDTO;
         }

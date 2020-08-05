@@ -32,7 +32,7 @@ namespace GuildAPI.Controllers
         // GET: api/Guilds
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<GuildDTO>>> GetGuilds()
+        public async Task<ActionResult<IEnumerable<GuildsDTO>>> GetGuilds()
         {
             return await _guilds.GetGuilds();
         }
@@ -40,7 +40,7 @@ namespace GuildAPI.Controllers
         // GET: api/Guilds/5
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<GuildDTO>> GetGuilds(int id)
+        public async Task<ActionResult<GuildsDTO>> GetGuilds(int id)
         {
             var guilds = await _guilds.GetGuild(id);
 
@@ -57,7 +57,7 @@ namespace GuildAPI.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         [Authorize(Policy = "Manager")]
-        public async Task<IActionResult> PutGuilds(int id, Guilds guilds)
+        public async Task<IActionResult> PutGuilds(int id, GuildsDTO guilds)
         {
             if (id != guilds.Id)
             {
@@ -67,12 +67,12 @@ namespace GuildAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Guilds
+        // POST: api/Guilds/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("Game/{gameId}")]
         [Authorize(Policy = "Manager")]
-        public async Task<ActionResult<Guilds>> PostGuilds(Guilds guilds, int gameId)
+        public async Task<ActionResult<GuildsDTO>> PostGuilds(GuildsDTO guilds, int gameId)
         {
             var email = HttpContext.User.Claims.First(e => e.Type == "Email").Value;
             var user = await _userManager.FindByEmailAsync(email);
@@ -89,7 +89,7 @@ namespace GuildAPI.Controllers
         // DELETE: api/Guilds/5
         [HttpDelete("{guildId}/Game/{gameId}")]
         [Authorize(Policy = "Manager")]
-        public async Task<ActionResult<Guilds>> DeleteGuilds(int guildId, int gameId)
+        public async Task<ActionResult<GuildsDTO>> DeleteGuilds(int guildId, int gameId)
         {
             var email = HttpContext.User.Claims.First(e => e.Type == "Email").Value;
             var user = await _userManager.FindByEmailAsync(email);

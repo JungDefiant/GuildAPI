@@ -21,8 +21,9 @@ namespace GuildAPI.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<GameGuilds>().HasKey(x => new { x.GameId, x.GuildId });
+            modelBuilder.Entity<GameManagers>().HasKey(x => new { x.GameId, x.UserId });
 
-
+            #region
             modelBuilder.Entity<Games>().HasData(
 
                 new Games
@@ -58,12 +59,13 @@ namespace GuildAPI.Data
                     Id = 3,
                     Name = ""
                 });
-
+            #endregion
         }
 
         public DbSet<Games> Games { get; set; }
         public DbSet<Guilds> Guilds { get; set; }
         public DbSet<GameGuilds> GameGuilds { get; set; }
+        public DbSet<GameManagers> GameManagers { get; set; }
     }
 }
 

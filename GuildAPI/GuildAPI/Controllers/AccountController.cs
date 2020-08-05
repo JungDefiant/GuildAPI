@@ -34,7 +34,7 @@ namespace GuildAPI.Controllers
         }
 
         [HttpPost, Route("register")]
-        [Authorize(Policy = "RegisterUser")]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
             ApplicationUser user = new ApplicationUser()
@@ -47,8 +47,12 @@ namespace GuildAPI.Controllers
 
             var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
-            if (result.Succeeded) return Ok();
-            
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, ApplicationRoles.Manager);
+                return Ok();
+            }
+
             return BadRequest("Invalid Registration");
         }
 
@@ -66,7 +70,8 @@ namespace GuildAPI.Controllers
 
                 var token = CreateToken(user, identityRole.ToList());
 
-                return Ok(new { 
+                return Ok(new
+                {
                     jwt = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo
                 });
@@ -79,13 +84,13 @@ namespace GuildAPI.Controllers
         {
             var authClaims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Sub, 
+                new Claim(JwtRegisteredClaimNames.Sub,
                 user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti,
                 Guid.NewGuid().ToString()),
                 new Claim("FirstName", user.FirstName),
                 new Claim("LastName", user.LastName),
-                new Claim("Id", user.Id)
+                new Claim("Email", user.Email)
             };
 
             foreach (var item in role)

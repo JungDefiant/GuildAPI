@@ -40,5 +40,13 @@ namespace GuildAPI.Models.interfaces
         /// <param name="id">Unique ID of the targeted guild</param>
         /// <returns>Task of completion</returns>
         Task Delete(int id);
+
+        /// <summary>
+        /// Verifies that a Manager (user) of a game has access to a specific game
+        /// </summary>
+        /// <param name="userId">ID of user (with manager role)</param>
+        /// <param name="gameId">ID of game</param>
+        /// <returns>True if they have access; False if denied access</returns>
+        Task<bool> VerifyManager(string userId, int gameId);
     }
 }

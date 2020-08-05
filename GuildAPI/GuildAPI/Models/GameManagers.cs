@@ -9,9 +9,8 @@ namespace GuildAPI.Models
     {
         public string UserId { get; set; }
         public int GameId { get; set; }
-
-        public List<ApplicationUser> Users { get; set; }
-        public List<Games> Games { get; set; }
+        public ApplicationUser User { get; set; }
+        public Games Game { get; set; }
 
     }
 }

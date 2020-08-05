@@ -36,8 +36,7 @@ namespace GuildAPI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options => 
-            options.Filters.Add(new AuthorizeFilter()))
+            services.AddControllers(options => options.Filters.Add(new AuthorizeFilter()))
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             services.AddDbContext<GuildAPIDbContext>(options =>
@@ -47,8 +46,8 @@ namespace GuildAPI
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("CreateGame", policy => policy.RequireRole(ApplicationRoles.Administrator));
-                options.AddPolicy("RegisterUser", policy => policy.RequireRole(ApplicationRoles.Administrator));
+                options.AddPolicy("Administrator", policy => policy.RequireRole(ApplicationRoles.Administrator));
+                options.AddPolicy("Manager", policy => policy.RequireRole(ApplicationRoles.Administrator, ApplicationRoles.Manager));
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()

@@ -125,22 +125,26 @@ namespace GuildAPI.Models.Services
             await _context.SaveChangesAsync();
         }
 
-
-
         /// <summary>
         /// removes manager from game
         /// </summary>
         /// <param name="gameId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        /*
         public async Task RemoveGameManager(int gameId, string userId)
         {
             var result = await _context.GameManagers.FirstOrDefaultAsync(x => x.GameId == gameId && x.UserId == userId);
             _context.Entry(result).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
-        */
 
+        /// <summary>
+        /// Verifies that a Manager (user) of a game has access to a specific game
+        /// </summary>
+        /// <param name="userId">ID of user (with manager role)</param>
+        /// <param name="gameId">ID of game</param>
+        /// <returns>True if they have access; False if denied access</returns>
+        public async Task<bool> VerifyManager(string userId, int gameId) =>
+            await _context.GameManagers.AnyAsync(x => x.UserId == userId && x.GameId == gameId);
     }
 }

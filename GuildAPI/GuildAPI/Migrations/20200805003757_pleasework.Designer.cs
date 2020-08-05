@@ -4,14 +4,16 @@ using GuildAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GuildAPI.Migrations
 {
     [DbContext(typeof(GuildAPIDbContext))]
-    partial class GuildAPIDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200805003757_pleasework")]
+    partial class pleasework
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

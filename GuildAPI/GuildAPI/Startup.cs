@@ -69,7 +69,18 @@ namespace GuildAPI
                     };
                 });
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GuildAPI", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                });
+                //c.OperationFilter<AuthenticationRequirementOperationFilter>();
+            });
 
             services.AddTransient<IGames, GamesService>();
             services.AddTransient<IGuilds, GuildService>();
@@ -102,7 +113,8 @@ namespace GuildAPI
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "GuildAPIMVP");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "GuildAPI");
+                c.RoutePrefix = string.Empty;
             });
         }
     }

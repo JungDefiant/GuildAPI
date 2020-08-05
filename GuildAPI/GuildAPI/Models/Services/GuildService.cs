@@ -12,9 +12,11 @@ namespace GuildAPI.Models.Services
     public class GuildService : IGuilds
     {
         private GuildAPIDbContext _context;
-        public GuildService(GuildAPIDbContext context)
+        private IGames _games;
+        public GuildService(GuildAPIDbContext context, IGames games)
         {
             _context = context;
+            _games = games;
         }
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace GuildAPI.Models.Services
             List<GamesDTO> games = new List<GamesDTO>();
             foreach (var item in gameGuilds)
             {
-                games.Add(await new GamesService(_context).GetGame(item.GameId));
+                games.Add(await _games.GetGame(item.GameId));
             }
             GuildsDTO dto = new GuildsDTO()
             {
@@ -66,6 +68,10 @@ namespace GuildAPI.Models.Services
                 Games = games,
                 Id = guild.Id
             };
+            foreach(var item in games)
+            {
+                item.Guilds = null;
+            }
             return dto;
         }
 

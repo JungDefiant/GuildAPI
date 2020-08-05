@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GuildAPI.Models.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,27 +13,27 @@ namespace GuildAPI.Models.interfaces
         /// </summary>
         /// <param name="games"></param>
         /// <returns>returns created game</returns>
-        Task<Games> Create(Games game);
+        Task<GamesDTO> Create(GamesDTO game);
 
         /// <summary>
         /// gets all games from db
         /// </summary>
         /// <returns>successfullly returns all games</returns>
-        Task<List<Games>> GetGames();
+        Task<List<GamesDTO>> GetGames();
 
         /// <summary>
         /// get specific game from db
         /// </summary>
         /// <param name="id"></param>
         /// <returns>returns selected game</returns>
-        Task<Games> GetGame(int id);
+        Task<GamesDTO> GetGame(int id);
 
         /// <summary>
         /// updates games db
         /// </summary>
         /// <param name="game"></param>
         /// <returns>successfully updated db</returns>
-        Task<Games> Update(Games game);
+        Task<GamesDTO> Update(GamesDTO game);
 
         /// <summary>
         /// deletes a specific game from the games table

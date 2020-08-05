@@ -1,4 +1,5 @@
 ﻿using GuildAPI.Data;
+using GuildAPI.Models.DTOs;
 using GuildAPI.Models.interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,21 +25,38 @@ namespace GuildAPI.Models.Services
         /// </summary>
         /// <param name="games"></param>
         /// <returns>returns created game</returns>
-        public async Task<Games> Create(Games games)
+        public async Task<GamesDTO> Create(GamesDTO gamesDTO)
         {
+            Games games = new Games()
+            {
+                Id = gamesDTO.Id,
+                Name = gamesDTO.Name
+            };
+
             _context.Entry(games).State = EntityState.Added;
             await _context.SaveChangesAsync();
-            return games;
+            return gamesDTO;
         }
 
         /// <summary>
         /// gets all games from db
         /// </summary>
         /// <returns>successfullly returns all games</returns>
-        public async Task<List<Games>> GetGames()
+        public async Task<List<GamesDTO>> GetGames()
         {
-            List<Games> result = await _context.Games.ToListAsync();
-            return result;
+            var games = await _context.Games
+                .Include(x => x.GameGuilds)
+                .ThenInclude(x => x.Guild)
+                .ToListAsync();
+
+            List<GamesDTO> gamesDTO = new List<GamesDTO>();
+
+            foreach(var game in games)
+            {
+                gamesDTO.Add(await GetGame(game.Id));
+            }
+
+            return gamesDTO;
         }
 
         /// <summary>
@@ -46,10 +64,37 @@ namespace GuildAPI.Models.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns>returns selected game</returns>
-        public async Task<Games> GetGame(int id)
+        public async Task<GamesDTO> GetGame(int id)
         {
-            Games result = await _context.Games.FindAsync(id);
-            return result;
+            var games = await _context.Games
+                .Where(x => x.Id == id)
+                .Include(x => x.GameGuilds)
+                .FirstOrDefaultAsync();
+
+            List<GuildsDTO> guilds = new List<GuildsDTO>();
+
+            foreach(GameGuilds gameGuild in games.GameGuilds)
+            {
+                guilds.Add(new GuildsDTO()
+                {
+                    Id = gameGuild.GuildId,
+                    Name = gameGuild.Guild.Name
+                });
+            }
+
+            GamesDTO gamesDTO = new GamesDTO()
+            {
+                Id = games.Id,
+                Name = games.Name,
+                Guilds = guilds
+            };
+
+            foreach(var guild in games.GameGuilds)
+            {
+                guild.Game = null;
+            }
+
+            return gamesDTO;
         }
 
         /// <summary>
@@ -57,11 +102,17 @@ namespace GuildAPI.Models.Services
         /// </summary>
         /// <param name="game"></param>
         /// <returns>successfully updated db</returns>
-        public async Task<Games> Update(Games game)
+        public async Task<GamesDTO> Update(GamesDTO gamesDTO)
         {
-            _context.Entry(game).State = EntityState.Modified;
+            Games games = new Games()
+            {
+                Id = gamesDTO.Id,
+                Name = gamesDTO.Name
+            };
+
+            _context.Entry(games).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return game;
+            return gamesDTO;
         }
 
         /// <summary>
@@ -71,8 +122,8 @@ namespace GuildAPI.Models.Services
         /// <returns>task of completion</returns>
         public async Task Delete(int id)
         {
-            Games games = await GetGame(id);
-            _context.Entry(games).State = EntityState.Deleted;
+            Games games = await _context.Games.FirstOrDefaultAsync(x => x.Id == id);
+            _context.Entry(games).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
 

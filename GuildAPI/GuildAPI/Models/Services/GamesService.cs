@@ -29,12 +29,12 @@ namespace GuildAPI.Models.Services
         {
             Games games = new Games()
             {
-                Id = gamesDTO.Id,
                 Name = gamesDTO.Name
             };
 
             _context.Entry(games).State = EntityState.Added;
             await _context.SaveChangesAsync();
+            gamesDTO.Id = games.Id;
             return gamesDTO;
         }
 
@@ -104,11 +104,9 @@ namespace GuildAPI.Models.Services
         /// <returns>successfully updated db</returns>
         public async Task<GamesDTO> Update(GamesDTO gamesDTO)
         {
-            Games games = new Games()
-            {
-                Id = gamesDTO.Id,
-                Name = gamesDTO.Name
-            };
+            var games = await _context.Games.FindAsync(gamesDTO.Id);
+
+            games.Name = gamesDTO.Name;
 
             _context.Entry(games).State = EntityState.Modified;
             await _context.SaveChangesAsync();

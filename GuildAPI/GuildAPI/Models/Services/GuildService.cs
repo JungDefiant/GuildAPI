@@ -95,16 +95,15 @@ namespace GuildAPI.Models.Services
         /// </summary>
         /// <param name="guild">The guild object with ID that will be updated to current ID'd object</param>
         /// <returns>Updated object</returns>
-        public async Task<GuildsDTO> Update(GuildsDTO dto)
+        public async Task<GuildsDTO> Update(GuildsDTO guildDTO)
         {
-            Guilds guild = new Guilds()
-            {
-                Id = dto.Id,
-                Name = dto.Name
-            };
+            var guild = await _context.Guilds.FindAsync(guildDTO.Id);
+
+            guild.Name = guildDTO.Name;
+
             _context.Entry(guild).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return dto;
+            return guildDTO;
         }
 
         /// <summary>

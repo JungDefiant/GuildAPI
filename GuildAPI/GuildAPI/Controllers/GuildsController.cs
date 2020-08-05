@@ -10,6 +10,7 @@ using GuildAPI.Models;
 using GuildAPI.Models.interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using GuildAPI.Models.DTOs;
 
 namespace GuildAPI.Controllers
 {
@@ -31,7 +32,7 @@ namespace GuildAPI.Controllers
         // GET: api/Guilds
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Guilds>>> GetGuilds()
+        public async Task<ActionResult<IEnumerable<GuildDTO>>> GetGuilds()
         {
             return await _guilds.GetGuilds();
         }
@@ -39,7 +40,7 @@ namespace GuildAPI.Controllers
         // GET: api/Guilds/5
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<Guilds>> GetGuilds(int id)
+        public async Task<ActionResult<GuildDTO>> GetGuilds(int id)
         {
             var guilds = await _guilds.GetGuild(id);
 

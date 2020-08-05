@@ -1,4 +1,5 @@
 ﻿using GuildAPI.Data;
+using GuildAPI.Models.DTOs;
 using GuildAPI.Models.interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -45,19 +46,35 @@ namespace GuildAPI.Models.Services
         /// </summary>
         /// <param name="id">Unique ID of the targeted guild</param>
         /// <returns>Targeted guild object</returns>
-        public async Task<Guilds> GetGuild(int id)
+        public async Task<GuildDTO> GetGuild(int id)
         {
             Guilds guild = await _context.Guilds.FindAsync(id);
-            return guild;
+            List<GameGuilds> gameGuilds = await _context.GameGuilds.Where(x => x.GuildId == id).ToListAsync();
+            List<Games> games = new List<Games>();
+            foreach (var item in gameGuilds)
+            {
+                games.Add(await new GamesService(_context).GetGame(item.GameId));
+            }
+            GuildDTO dto = new GuildDTO()
+            {
+                Name = guild.Name,
+                Games = games
+            };
+            return dto;
         }
 
         /// <summary>
         /// Gets a list of all the guilds in the in Guilds database table
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Guilds>> GetGuilds()
+        public async Task<List<GuildDTO>> GetGuilds()
         {
-            var guilds = await _context.Guilds.ToListAsync();
+            var list = await _context.Guilds.ToListAsync();
+            List<GuildDTO> guilds = new List<GuildDTO>();
+            foreach (var item in list)
+            {
+                guilds.Add(await GetGuild(item.Id));
+            }
             return guilds;
         }
 

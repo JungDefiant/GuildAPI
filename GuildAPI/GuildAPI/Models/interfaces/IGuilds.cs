@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GuildAPI.Models.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,14 +19,14 @@ namespace GuildAPI.Models.interfaces
         /// Gets a list of all the guilds in the in Guilds database table
         /// </summary>
         /// <returns></returns>
-        Task<List<Guilds>> GetGuilds();
+        Task<List<GuildDTO>> GetGuilds();
 
         /// <summary>
         /// Gets a specific guild from the Guilds database table
         /// </summary>
         /// <param name="id">Unique ID of the targeted guild</param>
         /// <returns>Targeted guild object</returns>
-        Task<Guilds> GetGuild(int id);
+        Task<GuildDTO> GetGuild(int id);
 
         /// <summary>
         /// Updates a specific guild from the Guilds database table

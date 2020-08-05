@@ -22,11 +22,16 @@ namespace GuildAPI.Models.Services
         /// </summary>
         /// <param name="guild">Guild object to be added</param>
         /// <returns>Created Guild</returns>
-        public async Task<Guilds> Create(Guilds guild)
+        public async Task<GuildsDTO> Create(GuildsDTO dto)
         {
+            Guilds guild = new Guilds()
+            {
+                Name = dto.Name
+            };
             _context.Entry(guild).State = EntityState.Added;
             await _context.SaveChangesAsync();
-            return guild;
+            dto.Id = guild.Id;
+            return dto;
         }
 
         /// <summary>
@@ -46,19 +51,20 @@ namespace GuildAPI.Models.Services
         /// </summary>
         /// <param name="id">Unique ID of the targeted guild</param>
         /// <returns>Targeted guild object</returns>
-        public async Task<GuildDTO> GetGuild(int id)
+        public async Task<GuildsDTO> GetGuild(int id)
         {
             Guilds guild = await _context.Guilds.FindAsync(id);
             List<GameGuilds> gameGuilds = await _context.GameGuilds.Where(x => x.GuildId == id).ToListAsync();
-            List<Games> games = new List<Games>();
+            List<GamesDTO> games = new List<GamesDTO>();
             foreach (var item in gameGuilds)
             {
                 games.Add(await new GamesService(_context).GetGame(item.GameId));
             }
-            GuildDTO dto = new GuildDTO()
+            GuildsDTO dto = new GuildsDTO()
             {
                 Name = guild.Name,
-                Games = games
+                Games = games,
+                Id = guild.Id
             };
             return dto;
         }
@@ -67,10 +73,10 @@ namespace GuildAPI.Models.Services
         /// Gets a list of all the guilds in the in Guilds database table
         /// </summary>
         /// <returns></returns>
-        public async Task<List<GuildDTO>> GetGuilds()
+        public async Task<List<GuildsDTO>> GetGuilds()
         {
             var list = await _context.Guilds.ToListAsync();
-            List<GuildDTO> guilds = new List<GuildDTO>();
+            List<GuildsDTO> guilds = new List<GuildsDTO>();
             foreach (var item in list)
             {
                 guilds.Add(await GetGuild(item.Id));
@@ -83,11 +89,16 @@ namespace GuildAPI.Models.Services
         /// </summary>
         /// <param name="guild">The guild object with ID that will be updated to current ID'd object</param>
         /// <returns>Updated object</returns>
-        public async Task<Guilds> Update(Guilds guild)
+        public async Task<GuildsDTO> Update(GuildsDTO dto)
         {
+            Guilds guild = new Guilds()
+            {
+                Id = dto.Id,
+                Name = dto.Name
+            };
             _context.Entry(guild).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return guild;
+            return dto;
         }
 
         /// <summary>

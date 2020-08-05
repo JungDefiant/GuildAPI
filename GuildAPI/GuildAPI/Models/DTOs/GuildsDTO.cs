@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace GuildAPI.Models.DTOs
 {
-    public class GuildDTO
+    public class GuildsDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public List<Games> Games { get; set; }
     }

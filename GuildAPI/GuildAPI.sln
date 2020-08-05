@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuildAPI", "GuildAPI\GuildAPI.csproj", "{7981144D-1B90-4B04-BF80-3068C2818CBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuildAPI", "GuildAPI\GuildAPI.csproj", "{7981144D-1B90-4B04-BF80-3068C2818CBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuildAPITesting", "GuildAPITesting\GuildAPITesting.csproj", "{5036C090-34E3-4DE9-91EF-E055D5FA6C41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{7981144D-1B90-4B04-BF80-3068C2818CBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7981144D-1B90-4B04-BF80-3068C2818CBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7981144D-1B90-4B04-BF80-3068C2818CBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5036C090-34E3-4DE9-91EF-E055D5FA6C41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5036C090-34E3-4DE9-91EF-E055D5FA6C41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5036C090-34E3-4DE9-91EF-E055D5FA6C41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5036C090-34E3-4DE9-91EF-E055D5FA6C41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

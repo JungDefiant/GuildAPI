@@ -98,17 +98,9 @@ namespace GuildAPI.Migrations
                     b.Property<int>("GuildId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GamesId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("GuildsId")
-                        .HasColumnType("int");
-
                     b.HasKey("GameId", "GuildId");
 
-                    b.HasIndex("GamesId");
-
-                    b.HasIndex("GuildsId");
+                    b.HasIndex("GuildId");
 
                     b.ToTable("GameGuilds");
                 });
@@ -325,13 +317,17 @@ namespace GuildAPI.Migrations
 
             modelBuilder.Entity("GuildAPI.Models.GameGuilds", b =>
                 {
-                    b.HasOne("GuildAPI.Models.Games", "Games")
+                    b.HasOne("GuildAPI.Models.Games", "Game")
                         .WithMany("GameGuilds")
-                        .HasForeignKey("GamesId");
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("GuildAPI.Models.Guilds", "Guilds")
+                    b.HasOne("GuildAPI.Models.Guilds", "Guild")
                         .WithMany("GameGuilds")
-                        .HasForeignKey("GuildsId");
+                        .HasForeignKey("GuildId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GuildAPI.Models.GameManagers", b =>

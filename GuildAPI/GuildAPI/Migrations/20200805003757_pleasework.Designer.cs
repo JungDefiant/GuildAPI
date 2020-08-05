@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuildAPI.Migrations
 {
     [DbContext(typeof(GuildAPIDbContext))]
-    [Migration("20200804191644_gamemanagers")]
-    partial class gamemanagers
+    [Migration("20200805003757_pleasework")]
+    partial class pleasework
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,12 +42,6 @@ namespace GuildAPI.Migrations
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("GameManagersGameId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GameManagersUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
@@ -95,8 +89,6 @@ namespace GuildAPI.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("GameManagersGameId", "GameManagersUserId");
-
                     b.ToTable("AspNetUsers");
                 });
 
@@ -108,17 +100,9 @@ namespace GuildAPI.Migrations
                     b.Property<int>("GuildId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GamesId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("GuildsId")
-                        .HasColumnType("int");
-
                     b.HasKey("GameId", "GuildId");
 
-                    b.HasIndex("GamesId");
-
-                    b.HasIndex("GuildsId");
+                    b.HasIndex("GuildId");
 
                     b.ToTable("GameGuilds");
                 });
@@ -133,6 +117,8 @@ namespace GuildAPI.Migrations
 
                     b.HasKey("GameId", "UserId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("GameManagers");
                 });
 
@@ -143,18 +129,10 @@ namespace GuildAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("GameManagersGameId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GameManagersUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GameManagersGameId", "GameManagersUserId");
 
                     b.ToTable("Games");
 
@@ -339,29 +317,34 @@ namespace GuildAPI.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("GuildAPI.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("GuildAPI.Models.GameManagers", null)
-                        .WithMany("Users")
-                        .HasForeignKey("GameManagersGameId", "GameManagersUserId");
-                });
-
             modelBuilder.Entity("GuildAPI.Models.GameGuilds", b =>
                 {
-                    b.HasOne("GuildAPI.Models.Games", "Games")
+                    b.HasOne("GuildAPI.Models.Games", "Game")
                         .WithMany("GameGuilds")
-                        .HasForeignKey("GamesId");
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("GuildAPI.Models.Guilds", "Guilds")
+                    b.HasOne("GuildAPI.Models.Guilds", "Guild")
                         .WithMany("GameGuilds")
-                        .HasForeignKey("GuildsId");
+                        .HasForeignKey("GuildId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("GuildAPI.Models.Games", b =>
+            modelBuilder.Entity("GuildAPI.Models.GameManagers", b =>
                 {
-                    b.HasOne("GuildAPI.Models.GameManagers", null)
-                        .WithMany("Games")
-                        .HasForeignKey("GameManagersGameId", "GameManagersUserId");
+                    b.HasOne("GuildAPI.Models.Games", "Game")
+                        .WithMany("GameManagers")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GuildAPI.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

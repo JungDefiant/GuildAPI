@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore ./GuildAPI/GuildAPI.sln
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ./GuildAPI/GuildAPI.sln --configuration Release
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test ./GuildAPI/GuildAPI.sln --configuration Release

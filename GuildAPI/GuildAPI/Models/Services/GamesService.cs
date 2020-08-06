@@ -69,6 +69,7 @@ namespace GuildAPI.Models.Services
             var games = await _context.Games
                 .Where(x => x.Id == id)
                 .Include(x => x.GameGuilds)
+                .ThenInclude(x => x.Guild)
                 .FirstOrDefaultAsync();
 
             List<GuildsDTO> guilds = new List<GuildsDTO>();

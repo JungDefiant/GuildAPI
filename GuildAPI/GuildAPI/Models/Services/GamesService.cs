@@ -69,11 +69,12 @@ namespace GuildAPI.Models.Services
             var games = await _context.Games
                 .Where(x => x.Id == id)
                 .Include(x => x.GameGuilds)
+                .ThenInclude(x => x.Guild)
                 .FirstOrDefaultAsync();
 
             List<GuildsDTO> guilds = new List<GuildsDTO>();
 
-            foreach(GameGuilds gameGuild in games.GameGuilds)
+            foreach (GameGuilds gameGuild in games.GameGuilds)
             {
                 guilds.Add(new GuildsDTO()
                 {
@@ -89,7 +90,7 @@ namespace GuildAPI.Models.Services
                 Guilds = guilds
             };
 
-            foreach(var guild in games.GameGuilds)
+            foreach (var guild in games.GameGuilds)
             {
                 guild.Game = null;
             }

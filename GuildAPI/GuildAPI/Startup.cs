@@ -109,7 +109,7 @@ namespace GuildAPI
 
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            //RoleInitializer.SeedData(serviceProvider, userManager, Configuration);
+            RoleInitializer.SeedData(serviceProvider, userManager, Configuration);
 
             app.UseEndpoints(endpoints =>
             {

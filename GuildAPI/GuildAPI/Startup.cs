@@ -16,6 +16,10 @@ using GuildAPI.Models.Services;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace GuildAPI
 {
@@ -82,7 +86,7 @@ namespace GuildAPI
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer",
                 });
-                //c.OperationFilter<AuthenticationRequirementOperationFilter>();
+                c.OperationFilter<AuthenticationRequirementOperationFilter>();
             });
 
             services.AddTransient<IGames, GamesService>();
@@ -119,6 +123,29 @@ namespace GuildAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "GuildAPI");
                 c.RoutePrefix = string.Empty;
             });
+        }
+
+        private class AuthenticationRequirementOperationFilter : IOperationFilter
+        {
+            public void Apply(OpenApiOperation operation, OperationFilterContext context)
+            {
+                var hasAnonymous = context.ApiDescription.CustomAttributes().OfType<AllowAnonymousAttribute>().Any();
+                if (hasAnonymous)
+                    return;
+                operation.Security ??= new List<OpenApiSecurityRequirement>();
+                var scheme = new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Id = "Bearer",
+                        Type = ReferenceType.SecurityScheme,
+                    },
+                };
+                operation.Security.Add(new OpenApiSecurityRequirement
+                {
+                    [scheme] = new List<string>()
+                });
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 # GuildAPI
-**Authors:** Bryant Davis, Lesley Rivera, Peyton Cysewski, Bade Habib
+![Actions Status](https://github.com/jeremymaya/Code-401-Async-Inn-API/workflows/build/badge.svg)  
+**Authors:** Bryant Davis, Lesley Rivera, Peyton Cysewski, Bade Habib  
 
 # Description
 This is a service that allows game developers to outsource their guild information

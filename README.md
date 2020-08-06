@@ -2,20 +2,64 @@
 **Authors:** Bryant Davis, Lesley Rivera, Peyton Cysewski, Bade Habib
 
 # Description
-This is a service for managing Guilds in online games. Developers can download this API onto their own backend servers for an out-of-the-box solution to Guild management systems. By default, the service allows clients to create new guilds, manage ranks, and control roles.
+This is a service that allows game developers to outsource their guild information
 
-## User Stories
+* Developers can make API calls on their servers to keep track of what guilds are in their games
 
-1) A User that wants to create a multiplayer game wants an API that will create the basic structure of the guild portion of their game so that it will
-save them time, planning and money.
+* Developers will have their games registered into our databases.
 
-2) A User wants to manage their guilds in the database so that they can control their game guilds from their own server.
+* By default, the service allows clients to create new guilds within their games.
 
-3) A User wants the data organized by game so that they can view the different games they have in development.
 
-4) A User wants to anonymously view games and guilds so that that they can view the data prior to getting authorization.
+| Challenge      |Name       |
+|----------|:-----------------------------------------------------------------------------:|
+|[Process](#process) 	|Process Documention(ERD, Data Flow, Domain Model)       	|
+|[ERD](#erd) 	|ERD       	|
+|[Data Flow](#data-flow) 	|Data Flow    	|
+|[Domain Model](#domain-model) 	|Domain Model    	|
+|[API Calls](#api-calls) 	|API Calls    	|
+|[Registration](#registration) 	|Register an Account    	|
+|[Login](#login) 	|Login with your Account    	|
+|[Guild](#guild) 	|Guild API Calls    	|
+|[Create Guild](#create-guild) 	|Create Guild  	|
 
-5) As a User I want added security measures to ensure my data cannot be manipulated so that I know my data is only being manipulated by my team.
+
+
+## Process
+
+### ERD
+![ERD](./Assets/ERD.jpg)
+
+### Data Flow
+![Data Flow](./Assets/Data-Flow.jpg)
+
+### Domain Model
+![Domain Model](./Assets/DomainModelDiagram.jpg)
+
+## API Calls
+In This section we will show you how to do each API call
+
+### Registration
+To register an account please Email us at admin@GuildApi.com with the following information:
+* First Name
+* Last Name
+* Email address
+* Name of Game(s)
+
+### Login
+`https://guildapi.azurewebsites.net/api/Account/Login
+{
+	"Email" : Admin@gmail.com
+	"Password" : Testing123!@
+}`
+
+You will then receive a token that is good for 24hrs and will need to use this token for Authorization.
+
+## Guild
+
+### Create Guild
+
+
 
 
 

@@ -29,13 +29,13 @@ This is a service that allows game developers to outsource their guild informati
 ## Process
 
 ### ERD
-![ERD](./Assets/ERD.jpg)
+![ERD](./Assets/ERD.png)
 
 ### Data Flow
 ![Data Flow](./Assets/Data-Flow.jpg)
 
 ### Domain Model
-![Domain Model](./Assets/DomainModelDiagram.jpg)
+![Domain Model](./Assets/DomainModelDiagram.png)
 
 ## API Calls
 In This section we will show you how to do each API call

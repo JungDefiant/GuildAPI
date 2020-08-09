@@ -76,6 +76,7 @@ namespace GuildAPI
                     };
                 });
 
+            // implements use of swagger into our API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GuildAPI", Version = "v1" });
@@ -118,6 +119,7 @@ namespace GuildAPI
 
             app.UseSwagger();
 
+            // provides a front end with swagger for easy, visual testing
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "GuildAPI");
@@ -125,6 +127,7 @@ namespace GuildAPI
             });
         }
 
+        // Adds functionality for use of a bearer token in the SwaggerUI
         private class AuthenticationRequirementOperationFilter : IOperationFilter
         {
             public void Apply(OpenApiOperation operation, OperationFilterContext context)

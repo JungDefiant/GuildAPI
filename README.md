@@ -42,7 +42,7 @@ This is a service that allows game developers to outsource their guild informati
 ### Project Board
 [Top](#table-of-contents)
 
-[Project Board]: https://github.com/JungDefiant/GuildAPI/projects/1
+[Project Board](https://github.com/JungDefiant/GuildAPI/projects/1)
 
 ### ERD
 [Top](#table-of-contents)
